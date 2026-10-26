@@ -1,0 +1,15 @@
+node_modules/
+playwright-report/
+test-results/
+.DS_Store
+
+# secrets / env files
+.env
+.env.*
+!.env.example
+
+# local exploration snapshots
+.playwright-mcp/
+
+# personal Claude Code settings
+.claude/settings.local.json
