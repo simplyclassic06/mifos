@@ -1,0 +1,58 @@
+name: Playwright Tests
+
+on:
+  pull_request:
+    branches: [main]          # PR raised/updated into main → smoke
+  push:
+    branches: [main]          # merged to main → regression
+  schedule:
+    - cron: '30 20 * * *'     # nightly regression: 20:30 UTC = 2:00 AM IST
+  workflow_dispatch:          # "Run workflow" button in the Actions tab
+    inputs:
+      suite:
+        description: 'Which tests to run'
+        type: choice
+        options: [smoke, regression]
+        default: smoke
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      # PR → smoke | manual → chosen suite | push/nightly → regression
+      SUITE: ${{ github.event_name == 'pull_request' && 'smoke' || github.event_name == 'workflow_dispatch' && inputs.suite || 'regression' }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Check test environment is up
+        run: |
+          curl -sf -m 30 -X POST \
+            -H "Fineract-Platform-TenantId: default" -H "Content-Type: application/json" \
+            -d '{"username":"mifos","password":"password"}' \
+            https://demo.mifos.community/fineract-provider/api/v1/authentication > /dev/null
+
+      - name: Run ${{ env.SUITE }} tests
+        run: npm run test:${{ env.SUITE }} -- --workers=2
+
+      - name: Upload HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-${{ env.SUITE }}
+          path: playwright-report/
+          retention-days: 14
