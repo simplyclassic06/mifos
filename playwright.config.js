@@ -1,5 +1,11 @@
 const { defineConfig, devices } = require('@playwright/test');
 
+const ENV = process.env.ENV || 'demo';
+require('dotenv').config({ path: `.env.${ENV}`, quiet: true });
+
+if (!process.env.BASE_URL) {
+  throw new Error(`BASE_URL is not set. Create .env.${ENV} or set it in CI secrets.`);
+}
 module.exports = defineConfig({
   testDir: './tests',
   timeout: 30_000,
@@ -12,8 +18,7 @@ module.exports = defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: [['list'], ['html', { open: 'never' }]],
   use: {
-    baseURL: 'https://demo.mifos.community',
-    httpCredentials: { username: 'mifos', password: 'password' },
+    baseURL: process.env.BASE_URL,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',

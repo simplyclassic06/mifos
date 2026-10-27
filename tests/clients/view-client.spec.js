@@ -21,7 +21,7 @@ test.beforeAll(async ({ playwright }, testInfo) => {
 test.beforeEach(async ({ page }) => {
     const loginPage = new LoginPage(page);
     await loginPage.goto();
-    await loginPage.login('mifos', 'password');
+    await loginPage.login(process.env.APP_USER, process.env.APP_PASS);
     await loginPage.closeWarning();
 });
 
