@@ -13,8 +13,8 @@ test('TC-L01 Login Page loads',{ tag: '@smoke' }, async ({ page }) => {
 
 test('TC-L02 Valid Login',{ tag: ['@smoke', '@regression'] }, async ({ page }) => {
     await page.goto('/');
-    await page.getByRole('textbox', { name: 'Username' }).fill('mifos');
-    await page.getByRole('textbox', { name: 'Password' }).fill('password');
+    await page.getByRole('textbox', { name: 'Username' }).fill(process.env.APP_USER);
+    await page.getByRole('textbox', { name: 'Password' }).fill(process.env.APP_PASS);
     await expect(page.getByRole('button', { name: 'Login' })).toBeEnabled();
     await page.getByRole('button', { name: 'Login' }).click();
 
@@ -30,7 +30,7 @@ test('TC-L02 Valid Login',{ tag: ['@smoke', '@regression'] }, async ({ page }) =
 test('TC-L10 Logout',{ tag: ['@smoke', '@regression'] }, async ({ page }) => {
     const loginPage = new LoginPage(page);
     await loginPage.goto();
-    await loginPage.login('mifos', 'password');
+    await loginPage.login(process.env.APP_USER, process.env.APP_PASS);
     await loginPage.closeWarning();
 
     await page.getByRole('button', { name: 'User Profile' }).click();
@@ -48,7 +48,7 @@ test('TC-L10 Logout',{ tag: ['@smoke', '@regression'] }, async ({ page }) => {
 
 test('TC-L07 Wrong password',{ tag: ['@regression'] }, async ({ page }) => {
     await page.goto('/');
-    await page.getByRole('textbox', { name: 'Username' }).fill('mifos');
+    await page.getByRole('textbox', { name: 'Username' }).fill(process.env.APP_USER);
     await page.getByRole('textbox', { name: 'Password' }).fill('wrongpass123');
     await page.getByRole('button', { name: 'Login' }).click();
 
@@ -97,7 +97,7 @@ test('TC-L06 Password shorter than 8 characters', { tag: '@known-bug' }, async (
     test.fail(true, 'Bug: message says "Password is required" instead of mentioning the 8-character minimum');
     const loginPage = new LoginPage(page);
     await loginPage.goto();
-    await loginPage.username.fill('mifos');
+    await loginPage.username.fill(process.env.APP_USER);
     await loginPage.password.fill('abc');
 
     await expect(loginPage.loginButton).toBeDisabled();

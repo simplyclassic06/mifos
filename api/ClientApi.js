@@ -3,7 +3,7 @@ const { expect } = require('@playwright/test');
 const API = '/fineract-provider/api/v1';
 const HEADERS = {
   'Fineract-Platform-TenantId': 'default',
-  Authorization: 'Basic ' + Buffer.from('mifos:password').toString('base64'),
+  Authorization: 'Basic ' + Buffer.from(`${process.env.APP_USER}:${process.env.APP_PASS}`).toString('base64'),
 };
 const PERMANENT_ADDRESS_TYPE_ID = 46; // from GET /clients/template → address.addressTypeIdOptions
 
