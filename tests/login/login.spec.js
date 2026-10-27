@@ -1,7 +1,7 @@
 const { test, expect } = require('@playwright/test');
 const { LoginPage } = require('../../pages/LoginPage');
 
-test('TC-L01 Login Page loads',{ tag: '@smoke' }, async ({ page }) => {
+test('TC-L01 Login Page loads',{ tag: ['@smoke', '@prod-safe'] }, async ({ page }) => {
     await page.goto('/');
     await expect(page).toHaveURL(/#\/login/);
     await expect(page).toHaveTitle('Login');
@@ -11,7 +11,7 @@ test('TC-L01 Login Page loads',{ tag: '@smoke' }, async ({ page }) => {
     await expect(page.getByRole('button', { name: 'Login' })).toBeDisabled();
 });
 
-test('TC-L02 Valid Login',{ tag: ['@smoke', '@regression'] }, async ({ page }) => {
+test('TC-L02 Valid Login',{ tag: ['@smoke', '@regression', '@prod-safe'] }, async ({ page }) => {
     await page.goto('/');
     await page.getByRole('textbox', { name: 'Username' }).fill(process.env.APP_USER);
     await page.getByRole('textbox', { name: 'Password' }).fill(process.env.APP_PASS);
@@ -27,7 +27,7 @@ test('TC-L02 Valid Login',{ tag: ['@smoke', '@regression'] }, async ({ page }) =
     await expect(page.getByText('Welcome mifos to Default!')).toBeVisible();
 });
 
-test('TC-L10 Logout',{ tag: ['@smoke', '@regression'] }, async ({ page }) => {
+test('TC-L10 Logout',{ tag: ['@smoke', '@regression', '@prod-safe'] }, async ({ page }) => {
     const loginPage = new LoginPage(page);
     await loginPage.goto();
     await loginPage.login(process.env.APP_USER, process.env.APP_PASS);
@@ -59,7 +59,7 @@ test('TC-L07 Wrong password',{ tag: ['@regression'] }, async ({ page }) => {
     await expect(page.getByRole('textbox', { name: 'Password' })).toHaveValue('');
 });
 
-test('TC-L04+L05 Required fields',{ tag: ['@regression'] }, async ({ page }) => {
+test('TC-L04+L05 Required fields',{ tag: ['@regression', '@prod-safe'] }, async ({ page }) => {
     await page.goto('/');
     const username = page.getByRole('textbox', { name: 'Username' });
     const password = page.getByRole('textbox', { name: 'Password' });
@@ -74,7 +74,7 @@ test('TC-L04+L05 Required fields',{ tag: ['@regression'] }, async ({ page }) => 
     await expect(page.getByRole('button', { name: 'Login' })).toBeDisabled();
 });
 
-test('TC-L03 Login disabled when fields are empty', async ({ page }) => {
+test('TC-L03 Login disabled when fields are empty', { tag: '@prod-safe' }, async ({ page }) => {
     const loginPage = new LoginPage(page);
     await loginPage.goto();
 
@@ -104,7 +104,7 @@ test('TC-L06 Password shorter than 8 characters', { tag: '@known-bug' }, async (
     await expect(page.getByText(/min length 8/)).toBeVisible({ timeout: 5000 });
 });
 
-test('TC-L09 Show / hide password', async ({ page }) => {
+test('TC-L09 Show / hide password', { tag: '@prod-safe' }, async ({ page }) => {
     const loginPage = new LoginPage(page);
     await loginPage.goto();
     await loginPage.password.fill('password');

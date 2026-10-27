@@ -14,7 +14,7 @@ test.beforeEach(async ({ page }) => {
     await loginPage.closeWarning();
 });
 
-test('TC-01 Create Client form layout', { tag: '@regression' }, async ({ page }) => {
+test('TC-01 Create Client form layout', { tag: ['@regression', '@prod-safe'] }, async ({ page }) => {
     const form = new CreateClientPage(page);
     await form.goto();
 
@@ -33,7 +33,7 @@ test('TC-01 Create Client form layout', { tag: '@regression' }, async ({ page })
     await expect(form.previousButton('GENERAL')).toBeDisabled();
 });
 
-test('TC-02 Office dropdown lists offices', { tag: '@regression' }, async ({ page }) => {
+test('TC-02 Office dropdown lists offices', { tag: ['@regression', '@prod-safe'] }, async ({ page }) => {
     const form = new CreateClientPage(page);
     await form.goto();
     await form.office.click();
@@ -43,7 +43,7 @@ test('TC-02 Office dropdown lists offices', { tag: '@regression' }, async ({ pag
     }
 });
 
-test('TC-03 Step navigation', { tag: '@regression' }, async ({ page }) => {
+test('TC-03 Step navigation', { tag: ['@regression', '@prod-safe'] }, async ({ page }) => {
     const form = new CreateClientPage(page);
     await form.goto();
     await form.fillRequired({ office: 'Head Office', firstName: 'QAAuto', lastName: `Nav${Date.now()}` });
@@ -57,7 +57,7 @@ test('TC-03 Step navigation', { tag: '@regression' }, async ({ page }) => {
     await expect(form.addAddressButton).toBeVisible();
 });
 
-test('TC-04 No address → no Preview step', { tag: '@regression' }, async ({ page }) => {
+test('TC-04 No address → no Preview step', { tag: ['@regression', '@prod-safe'] }, async ({ page }) => {
     const form = new CreateClientPage(page);
     await form.goto();
     await form.goToAddressStep({ office: 'Head Office', firstName: 'QAAuto', lastName: `NoAddr${Date.now()}` });
@@ -68,7 +68,7 @@ test('TC-04 No address → no Preview step', { tag: '@regression' }, async ({ pa
     await expect(form.submitButton).toHaveCount(0);
 });
 
-test('TC-05 Add Client Address dialog', { tag: '@regression' }, async ({ page }) => {
+test('TC-05 Add Client Address dialog', { tag: ['@regression', '@prod-safe'] }, async ({ page }) => {
     const form = new CreateClientPage(page);
     await form.goto();
     await form.goToAddressStep({ office: 'Head Office', firstName: 'QAAuto', lastName: `AddrDlg${Date.now()}` });
